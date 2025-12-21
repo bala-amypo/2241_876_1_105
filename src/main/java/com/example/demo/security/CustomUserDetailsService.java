@@ -1,4 +1,3 @@
-
 package com.example.demo.security;
 
 import com.example.demo.entity.User;
@@ -17,20 +16,18 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    // ⚠️ METHOD NAME MUST BE EXACT
     @Override
-    public UserDetails loadUserByUsername(String email)
+    public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found")
-                );
+                        new UsernameNotFoundException("User not found with username: " + username));
 
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
+                .withUsername(user.getUsername())
                 .password(user.getPassword())
-                .authorities(user.getRole())
+                .roles(user.getRole())
                 .build();
     }
 }
