@@ -40,11 +40,11 @@ public class SecurityConfig {
                         "/auth/**",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
-                        "/api/alerts",
-                        "/api/appointments",
-                        "/api/visitors",
-                        "/api/visits"
-
+                        "/api/alerts/**",
+                        "/api/appointments/**",
+                        "/api/visitors/**",
+                        "/api/visits/**",
+                        "/api/hosts/**"
 
                 ).permitAll()
 
