@@ -11,10 +11,10 @@ import java.util.List;
 @Service
 public class VisitorServiceImpl implements VisitorService {
 
-    // IMPORTANT: field name must be exactly visitorRepository
+    
     private final VisitorRepository visitorRepository;
 
-    // Constructor injection ONLY
+    
     public VisitorServiceImpl(VisitorRepository visitorRepository) {
         this.visitorRepository = visitorRepository;
     }
