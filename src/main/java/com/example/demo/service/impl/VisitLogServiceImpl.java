@@ -2,41 +2,44 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
+import com.example.demo.service.VisitLogService;
 import com.example.demo.exception.ResourceNotFoundException;
+
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
 
-public class VisitLogServiceImpl {
+public class VisitLogServiceImpl implements VisitLogService {
 
-    VisitLogRepository visitLogRepository;
-    VisitorRepository visitorRepository;
-    HostRepository hostRepository;
+    private VisitLogRepository visitLogRepository;
+    private VisitorRepository visitorRepository;
+    private HostRepository hostRepository;
 
     public VisitLogServiceImpl() {}
 
-    public VisitLog checkInVisitor(Long vid, Long hid, String purpose) {
+    @Override
+    public VisitLog checkInVisitor(Long visitorId, Long hostId, String purpose) {
 
-        Visitor v = visitorRepository.findById(vid)
-            .orElseThrow(() -> new ResourceNotFoundException("Visitor not found"));
+        Visitor visitor = visitorRepository.findById(visitorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Visitor not found"));
 
-        Host h = hostRepository.findById(hid)
-            .orElseThrow(() -> new ResourceNotFoundException("Host not found"));
+        Host host = hostRepository.findById(hostId)
+                .orElseThrow(() -> new ResourceNotFoundException("Host not found"));
 
         VisitLog log = new VisitLog();
-        log.setVisitor(v);
-        log.setHost(h);
+        log.setVisitor(visitor);
+        log.setHost(host);
         log.setPurpose(purpose);
-        log.setCheckInTime(LocalDateTime.now());
         log.setAccessGranted(true);
-        log.setAlertSent(false);
+        log.setCheckInTime(LocalDateTime.now());
 
         return visitLogRepository.save(log);
     }
 
-    public VisitLog checkOutVisitor(Long id) {
+    @Override
+    public VisitLog checkOutVisitor(Long visitLogId) {
 
-        VisitLog log = visitLogRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("VisitLog not found"));
+        VisitLog log = visitLogRepository.findById(visitLogId)
+                .orElseThrow(() -> new ResourceNotFoundException("VisitLog not found"));
 
         if (log.getCheckInTime() == null) {
             throw new IllegalStateException("Visitor not checked in");
@@ -46,12 +49,14 @@ public class VisitLogServiceImpl {
         return visitLogRepository.save(log);
     }
 
-    public List<VisitLog> getActiveVisits() {
-        return visitLogRepository.findByCheckOutTimeIsNull();
-    }
-
+    @Override
     public VisitLog getVisitLog(Long id) {
         return visitLogRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("VisitLog not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("VisitLog not found"));
+    }
+
+    @Override
+    public List<VisitLog> getActiveVisits() {
+        return visitLogRepository.findByCheckOutTimeIsNull();
     }
 }
