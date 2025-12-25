@@ -15,11 +15,15 @@ import java.util.List;
 @Service
 public class VisitLogServiceImpl implements VisitLogService {
 
-    private final VisitLogRepository visitLogRepository;
-    private final VisitorRepository visitorRepository;
-    private final HostRepository hostRepository;
+    // REQUIRED for tests
+    private VisitLogRepository visitLogRepository;
+    private VisitorRepository visitorRepository;
+    private HostRepository hostRepository;
 
-    // ✅ Constructor injection
+    // ✅ NO-ARG constructor (TESTS)
+    public VisitLogServiceImpl() {}
+
+    // ✅ Constructor injection (RUNTIME)
     public VisitLogServiceImpl(VisitLogRepository visitLogRepository,
                                VisitorRepository visitorRepository,
                                HostRepository hostRepository) {
@@ -30,7 +34,6 @@ public class VisitLogServiceImpl implements VisitLogService {
 
     @Override
     public VisitLog checkInVisitor(Long visitorId, Long hostId, String purpose) {
-
         Visitor visitor = visitorRepository.findById(visitorId).orElseThrow();
         Host host = hostRepository.findById(hostId).orElseThrow();
 
@@ -46,7 +49,6 @@ public class VisitLogServiceImpl implements VisitLogService {
 
     @Override
     public VisitLog checkOutVisitor(Long visitLogId) {
-
         VisitLog visitLog = visitLogRepository.findById(visitLogId)
                 .orElseThrow(() -> new RuntimeException("VisitLog not found"));
 

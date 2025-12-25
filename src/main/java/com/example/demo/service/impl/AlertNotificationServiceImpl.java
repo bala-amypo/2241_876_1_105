@@ -12,10 +12,14 @@ import java.util.List;
 @Service
 public class AlertNotificationServiceImpl implements AlertNotificationService {
 
-    private final AlertNotificationRepository alertRepository;
-    private final VisitLogRepository visitLogRepository;
+    // REQUIRED for tests
+    private AlertNotificationRepository alertRepository;
+    private VisitLogRepository visitLogRepository;
 
-    // ✅ Constructor injection
+    // ✅ NO-ARG constructor (TESTS)
+    public AlertNotificationServiceImpl() {}
+
+    // ✅ Constructor injection (RUNTIME)
     public AlertNotificationServiceImpl(AlertNotificationRepository alertRepository,
                                         VisitLogRepository visitLogRepository) {
         this.alertRepository = alertRepository;
@@ -54,7 +58,6 @@ public class AlertNotificationServiceImpl implements AlertNotificationService {
         return alertRepository.findAll();
     }
 }
-
 
 
 // package com.example.demo.service.impl;

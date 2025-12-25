@@ -8,9 +8,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class HostServiceImpl implements HostService {
 
-    private final HostRepository hostRepository;
+    // REQUIRED for tests (ReflectionTestUtils)
+    private HostRepository hostRepository;
 
-    // ✅ Constructor injection
+    // ✅ NO-ARG constructor (TESTS NEED THIS)
+    public HostServiceImpl() {}
+
+    // ✅ Constructor injection (SPRING RUNTIME)
     public HostServiceImpl(HostRepository hostRepository) {
         this.hostRepository = hostRepository;
     }
@@ -26,7 +30,6 @@ public class HostServiceImpl implements HostService {
                 .orElseThrow(() -> new RuntimeException("Host not found"));
     }
 }
-
 
 
 
