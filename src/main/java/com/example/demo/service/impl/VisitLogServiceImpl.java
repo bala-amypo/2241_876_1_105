@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class VisitLogServiceImpl implements VisitLogService {
@@ -25,9 +26,10 @@ public class VisitLogServiceImpl implements VisitLogService {
     private HostRepository hostRepository;
 
     // REQUIRED for TestNG
-    public VisitLogServiceImpl() {}
+    public VisitLogServiceImpl() {
+    }
 
-    // OPTIONAL constructor
+    // Optional constructor
     public VisitLogServiceImpl(VisitLogRepository visitLogRepository,
                                VisitorRepository visitorRepository,
                                HostRepository hostRepository) {
@@ -48,7 +50,6 @@ public class VisitLogServiceImpl implements VisitLogService {
         VisitLog visitLog = new VisitLog();
         visitLog.setVisitor(visitor);
         visitLog.setHost(host);
-        visitLog.setPurpose(purpose);
         visitLog.setCheckInTime(LocalDateTime.now());
         visitLog.setAccessGranted(true);
         visitLog.setAlertSent(false);
@@ -69,7 +70,19 @@ public class VisitLogServiceImpl implements VisitLogService {
         visitLog.setCheckOutTime(LocalDateTime.now());
         return visitLogRepository.save(visitLog);
     }
+
+    @Override
+    public VisitLog getVisitLog(Long id) {
+        return visitLogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("VisitLog not found"));
+    }
+
+    @Override
+    public List<VisitLog> getActiveVisits() {
+        return visitLogRepository.findByCheckOutTimeIsNull();
+    }
 }
+
 
 
 // package com.example.demo.service.impl;
