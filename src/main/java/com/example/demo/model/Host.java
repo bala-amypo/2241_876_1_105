@@ -1,5 +1,7 @@
 package com.example.demo.model;
 import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+
 public class Host {
 
     private Long id;
