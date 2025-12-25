@@ -3,18 +3,20 @@ package com.example.demo.service.impl;
 import com.example.demo.model.Host;
 import com.example.demo.repository.HostRepository;
 import com.example.demo.service.HostService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class HostServiceImpl implements HostService {
 
-    // REQUIRED for tests (ReflectionTestUtils)
+    // ✅ REQUIRED for Swagger runtime
+    @Autowired
     private HostRepository hostRepository;
 
-    // ✅ NO-ARG constructor (TESTS NEED THIS)
+    // ✅ REQUIRED for TestNG
     public HostServiceImpl() {}
 
-    // ✅ Constructor injection (SPRING RUNTIME)
+    // Optional constructor (safe to keep)
     public HostServiceImpl(HostRepository hostRepository) {
         this.hostRepository = hostRepository;
     }
@@ -32,7 +34,6 @@ public class HostServiceImpl implements HostService {
 }
 
 
-
 // package com.example.demo.service.impl;
 
 // import com.example.demo.model.Host;
@@ -43,10 +44,16 @@ public class HostServiceImpl implements HostService {
 // @Service
 // public class HostServiceImpl implements HostService {
 
-//     // ⚠️ REQUIRED by ReflectionTestUtils
+//     // REQUIRED for tests (ReflectionTestUtils)
 //     private HostRepository hostRepository;
 
+//     // ✅ NO-ARG constructor (TESTS NEED THIS)
 //     public HostServiceImpl() {}
+
+//     // ✅ Constructor injection (SPRING RUNTIME)
+//     public HostServiceImpl(HostRepository hostRepository) {
+//         this.hostRepository = hostRepository;
+//     }
 
 //     @Override
 //     public Host createHost(Host host) {
@@ -59,3 +66,5 @@ public class HostServiceImpl implements HostService {
 //                 .orElseThrow(() -> new RuntimeException("Host not found"));
 //     }
 // }
+
+
