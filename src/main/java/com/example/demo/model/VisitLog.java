@@ -1,5 +1,5 @@
 package com.example.demo.model;
-
+import jakarta.persistence.Entity;
 import java.time.LocalDateTime;
 
 public class VisitLog {
