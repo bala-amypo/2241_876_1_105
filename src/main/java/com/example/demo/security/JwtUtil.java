@@ -11,7 +11,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // REQUIRED BY TESTS (field names matter)
+    // REQUIRED BY TESTS (field names & types matter)
     private String secret =
             "thisIsASecretKeyForJwtSigningThatIsAtLeast32BytesLong";
     private Long jwtExpirationMs = 86400000L; // 1 day
@@ -26,12 +26,11 @@ public class JwtUtil {
     // =========================
     // REQUIRED BY TEST CASES
     // =========================
-    public Claims validateAndGetClaims(String token) {
+    public Jws<Claims> validateAndGetClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseClaimsJws(token);
     }
 
     // =========================
