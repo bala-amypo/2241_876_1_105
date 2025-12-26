@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.User;
+import com.example.demo.model.User;
 import com.example.demo.security.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
