@@ -11,21 +11,38 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // SAFE DEFAULTS (Swagger-safe, Test-safe)
-    private static final String DEFAULT_SECRET =
+    // REQUIRED BY TESTS (field names matter)
+    private String secret =
             "thisIsASecretKeyForJwtSigningThatIsAtLeast32BytesLong";
-    private static final long DEFAULT_EXPIRATION = 86400000; // 1 day
+    private Long jwtExpirationMs = 86400000L; // 1 day
 
     private Key key;
-    private long jwtExpirationMs;
 
     @PostConstruct
     public void init() {
-        this.key = Keys.hmacShaKeyFor(DEFAULT_SECRET.getBytes());
-        this.jwtExpirationMs = DEFAULT_EXPIRATION;
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String username, String role, Long userId, String email) {
+    // =========================
+    // REQUIRED BY TEST CASES
+    // =========================
+    public Claims validateAndGetClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    // =========================
+    // TOKEN GENERATION
+    // =========================
+    public String generateToken(
+            String username,
+            String role,
+            Long userId,
+            String email
+    ) {
 
         return Jwts.builder()
                 .setSubject(username)
@@ -33,12 +50,13 @@ public class JwtUtil {
                 .claim("userId", userId)
                 .claim("email", email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .setExpiration(
+                        new Date(System.currentTimeMillis() + jwtExpirationMs)
+                )
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 }
-
 
 // package com.example.demo.security;
 
