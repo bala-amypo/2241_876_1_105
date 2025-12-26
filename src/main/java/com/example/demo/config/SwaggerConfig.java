@@ -99,7 +99,7 @@ public class SwaggerConfig {
                         .description("API documentation for AmyPO test cases")
                 )
                 .servers(List.of(
-                        new Server().url("https://9126.32procr.amypo.ai/")
+                        new Server().url("https://9131.32procr.amypo.ai/")
                 ))
                 // 🔐 Enable Authorize button
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
