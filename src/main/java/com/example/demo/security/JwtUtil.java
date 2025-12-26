@@ -2,14 +2,28 @@ package com.example.demo.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
+
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private String secret;
-    private Long jwtExpirationMs;
+    // SAFE DEFAULTS (Swagger-safe, Test-safe)
+    private static final String DEFAULT_SECRET =
+            "thisIsASecretKeyForJwtSigningThatIsAtLeast32BytesLong";
+    private static final long DEFAULT_EXPIRATION = 86400000; // 1 day
+
+    private Key key;
+    private long jwtExpirationMs;
+
+    @PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(DEFAULT_SECRET.getBytes());
+        this.jwtExpirationMs = DEFAULT_EXPIRATION;
+    }
 
     public String generateToken(String username, String role, Long userId, String email) {
 
@@ -20,40 +34,26 @@ public class JwtUtil {
                 .claim("email", email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-    }
-
-    public Jws<Claims> validateAndGetClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secret.getBytes())
-                .build()
-                .parseClaimsJws(token);
     }
 }
 
 
 // package com.example.demo.security;
 
-// import io.jsonwebtoken.Claims;
-// import io.jsonwebtoken.Jwts;
-// import io.jsonwebtoken.JwtException;
-// import io.jsonwebtoken.SignatureAlgorithm;
+// import io.jsonwebtoken.*;
 // import io.jsonwebtoken.security.Keys;
-
-// import java.security.Key;
+// import org.springframework.stereotype.Component;
 // import java.util.Date;
 
+// @Component
 // public class JwtUtil {
 
-//     // These fields are set via ReflectionTestUtils in tests
 //     private String secret;
 //     private Long jwtExpirationMs;
 
-//     // Generate JWT token
 //     public String generateToken(String username, String role, Long userId, String email) {
-
-//         Key key = Keys.hmacShaKeyFor(secret.getBytes());
 
 //         return Jwts.builder()
 //                 .setSubject(username)
@@ -62,19 +62,16 @@ public class JwtUtil {
 //                 .claim("email", email)
 //                 .setIssuedAt(new Date())
 //                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-//                 .signWith(key, SignatureAlgorithm.HS256)
+//                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
 //                 .compact();
 //     }
 
-//     // Validate token and return claims
-//     public io.jsonwebtoken.Jws<Claims> validateAndGetClaims(String token)
-//             throws JwtException {
-
-//         Key key = Keys.hmacShaKeyFor(secret.getBytes());
-
+//     public Jws<Claims> validateAndGetClaims(String token) {
 //         return Jwts.parserBuilder()
-//                 .setSigningKey(key)
+//                 .setSigningKey(secret.getBytes())
 //                 .build()
 //                 .parseClaimsJws(token);
 //     }
 // }
+
+
