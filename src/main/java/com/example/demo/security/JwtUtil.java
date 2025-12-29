@@ -47,7 +47,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // ✅ DEFAULT VALUES (prevents Swagger 500 error)
+    
     private String secret = "0123456789ABCDEF0123456789ABCDEF";
     private Long jwtExpirationMs = 3600000L; // 1 hour
 
@@ -75,7 +75,7 @@ public class JwtUtil {
                 .parseClaimsJws(token);
     }
 
-    // ✅ Needed for JwtAuthenticationFilter
+    
     public String getTokenFromRequest(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
