@@ -16,7 +16,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        // Dummy user for JWT flow — DB not required for tests
+        
         return new User(
                 email,
                 "",
